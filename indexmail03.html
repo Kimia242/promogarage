@@ -278,8 +278,12 @@
           <a href="#" class="btn btn-primary" id="btn-whatsapp">📲 Contactez-nous sur WhatsApp</a>
           <a href="#" class="btn btn-ghost" id="btn-mail">📧 Envoyez-nous un email</a>
           
-          <form class="lead-form" name="lead-form" method="POST" data-netlify="true">
+          <form class="lead-form" name="lead-form" method="POST" data-netlify="true" netlify-honeypot="bot-field">
             <input type="hidden" name="form-name" value="lead-form" />
+            <!-- Champ "honeypot" pour la protection anti-spam de Netlify. Ne pas supprimer. -->
+            <p style="display: none;">
+              <label>Ne pas remplir si vous êtes humain: <input name="bot-field" /></label>
+            </p>
             <p style="color:var(--muted); font-size: 14px; text-align: center;">Ou remplissez le formulaire ci-dessous</p>
             <input type="text" name="name" placeholder="Votre nom / Nom du garage" required>
             <input type="tel" name="phone" placeholder="Téléphone (WhatsApp)" required>

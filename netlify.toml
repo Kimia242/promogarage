@@ -1,0 +1,18 @@
+# Fichier de configuration pour Netlify
+
+# Les paramètres dans [build] sont globaux et s'appliquent à tous les déploiements.
+[build]
+  # C'est le dossier à publier à partir de la racine de votre dépôt.
+  # Comme votre fichier HTML est à la racine, on met ".".
+  publish = "."
+  # Aucune commande de build n'est nécessaire pour un site statique simple.
+  command = ""
+
+# La redirection suivante est utile si vous ne renommez pas indexmail03.html en index.html.
+# Elle assure que les visiteurs de l'URL racine de votre site (ex: https://monsite.netlify.app/)
+# voient le contenu de indexmail03.html.
+# Si vous renommez le fichier en index.html, cette règle n'est plus nécessaire.
+[[redirects]]
+  from = "/"
+  to = "/indexmail03.html"
+  status = 200
