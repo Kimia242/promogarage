@@ -278,7 +278,7 @@
           <a href="#" class="btn btn-primary" id="btn-whatsapp">📲 Contactez-nous sur WhatsApp</a>
           <a href="#" class="btn btn-ghost" id="btn-mail">📧 Envoyez-nous un email</a>
           
-          <form class="lead-form" name="lead-form" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <form class="lead-form" name="lead-form" method="POST" action="/merci.html" data-netlify="true" netlify-honeypot="bot-field">
             <input type="hidden" name="form-name" value="lead-form" />
             <!-- Champ "honeypot" pour la protection anti-spam de Netlify. Ne pas supprimer. -->
             <p style="display: none;">
@@ -286,6 +286,7 @@
             </p>
             <p style="color:var(--muted); font-size: 14px; text-align: center;">Ou remplissez le formulaire ci-dessous</p>
             <input type="text" name="name" placeholder="Votre nom / Nom du garage" required>
+            <input type="email" name="email" placeholder="Votre adresse e-mail (obligatoire)" required aria-required="true">
             <input type="tel" name="phone" placeholder="Téléphone (WhatsApp)" required>
             <button type="submit">Je veux le Pack Visibilité</button>
           </form>
@@ -305,13 +306,52 @@
 
     document.getElementById('btn-mail').onclick = (e) => {
       e.preventDefault();
-      const body = encodeURIComponent(`Bonjour,
-Je souhaite souscrire au Pack Visibilité (499,99 € TTC).
-Mon nom / garage :
-Mon téléphone (WhatsApp) :`);
+      const body = encodeURIComponent(`Bonjour,\nJe souhaite souscrire au Pack Visibilité (499,99 € TTC).\nMon nom / garage :\nMon téléphone (WhatsApp) :`);
       const subject = encodeURIComponent('Demande Pack Visibilité - 499,99 € • Focus Innovation Group');
       window.location.href = `mailto:contact@focusinnovat.me?subject=${subject}&body=${body}`;
     };
+
+    // Interception de la soumission du formulaire pour Netlify (fetch) et confirmation inline
+    (function() {
+      const form = document.querySelector('form[name="lead-form"]');
+      if (!form) return;
+
+      const msg = document.createElement('p');
+      msg.style.color = 'var(--muted)';
+      msg.style.textAlign = 'center';
+      msg.style.fontSize = '14px';
+
+      form.addEventListener('submit', function(evt) {
+        // validation HTML5 assurera que email est présent
+        evt.preventDefault();
+        const data = new FormData(form);
+
+        fetch('/', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: data
+        }).then(() => {
+          // Si /merci.html existe, rediriger vers elle, sinon afficher confirmation inline
+          fetch('/merci.html', { method: 'HEAD' }).then((res) => {
+            if (res.ok) {
+              window.location.href = '/merci.html';
+            } else {
+              msg.textContent = 'Merci ! Votre demande a bien été envoyée. Nous revenons vers vous rapidement.';
+              form.parentNode.insertBefore(msg, form.nextSibling);
+              form.reset();
+            }
+          }).catch(() => {
+            msg.textContent = 'Merci ! Votre demande a bien été envoyée. Nous revenons vers vous rapidement.';
+            form.parentNode.insertBefore(msg, form.nextSibling);
+            form.reset();
+          });
+        }).catch((err) => {
+          msg.textContent = "Une erreur est survenue lors de l'envoi. Veuillez réessayer.";
+          form.parentNode.insertBefore(msg, form.nextSibling);
+          console.error(err);
+        });
+      });
+    })();
   </script>
 </body>
 </html>
